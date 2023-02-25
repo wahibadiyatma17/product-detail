@@ -5,7 +5,7 @@ import { BiChevronLeft } from 'react-icons/bi';
 import { toast } from 'react-hot-toast';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { css } from 'twin.macro';
+import 'twin.macro';
 
 import DefaultButton from 'components/Buttons/DefaultButton';
 import { useGetProducts } from 'hooks/products/productsHooks';
