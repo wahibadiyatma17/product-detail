@@ -135,10 +135,3 @@ const ProductDetail: FC = () => {
 };
 
 export default ProductDetail;
-
-const cssOtherProductImage = (isImageActive: boolean) => css`
-  border: ${isImageActive ? '1.5px solid #4CA85E' : '0.5px solid #E2E8F0'} !important;
-  :hover {
-    transform: scale(1.02);
-  }
-`;
