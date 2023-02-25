@@ -2,11 +2,13 @@ import React, { FC, useEffect, useMemo, useState } from 'react';
 import { MdAddShoppingCart } from 'react-icons/md';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { css } from 'twin.macro';
 
 import DefaultButton from 'components/Buttons/DefaultButton';
 import { useGetProducts } from 'hooks/products/productsHooks';
 import { ProductDetailDataType } from 'types/productDetailTypes';
+import { Skeleton } from '@chakra-ui/react';
 
 type ProductImageActiveType = {
   index: number;
@@ -14,23 +16,30 @@ type ProductImageActiveType = {
 };
 
 const ProductDetail: FC = () => {
+  const router = useRouter();
+
   const { data: productsAPIres, isLoading: isProductsAPILoading } = useGetProducts();
   const productsData = useMemo(
     () => (productsAPIres?.data as Array<ProductDetailDataType>) ?? [],
     [productsAPIres],
   );
+
   const [productActive, setProductActive] = useState<ProductDetailDataType | undefined>(undefined);
   const [imageActive, setImageActive] = useState<ProductImageActiveType>({
     index: 0,
     imageUrl: productActive?.image,
   });
+  const { id } = router.query;
+  const productDetailId = id as string;
 
   useEffect(() => {
-    setProductActive(productsData[0]);
-    setImageActive({
-      index: 0,
-      imageUrl: productsData[0]?.image,
-    });
+    if (router.isReady) {
+      setProductActive(productsData[parseInt(productDetailId)]);
+      setImageActive({
+        index: 0,
+        imageUrl: productsData[parseInt(productDetailId)]?.image,
+      });
+    }
   }, [productsData]);
 
   return (
@@ -40,12 +49,17 @@ const ProductDetail: FC = () => {
           <>
             <div tw="flex flex-col items-end justify-center gap-4 w-5/12">
               <div tw="relative w-[29.25rem] h-[29.25rem] rounded-lg shadow-md border-[0.5px] border-solid ">
-                <Image
-                  src={imageActive?.imageUrl ?? '/images/img-product-placeholder.png'}
-                  alt="product image"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                />
+                {isProductsAPILoading ? (
+                  <Skeleton />
+                ) : (
+                  <Image
+                    src={imageActive?.imageUrl!}
+                    alt="product image"
+                    fill
+                    style={{ objectFit: 'cover' }}
+                  />
+                )}
+
                 <div tw="flex flex-row absolute bottom-2 right-4 items-center">
                   <BiChevronLeft
                     size={'16px'}
@@ -59,7 +73,7 @@ const ProductDetail: FC = () => {
                     }
                   />
                   <span tw="text-xs font-light text-black text-center min-w-[1.25rem]">
-                    {(imageActive?.index ?? 0) + 1}/{productActive?.images.length}
+                    {(imageActive?.index ?? 0) + 1}/{productActive?.images.length ?? 1}
                   </span>
                   <BiChevronRight
                     size={'16px'}
