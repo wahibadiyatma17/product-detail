@@ -1,20 +1,19 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
+import { Skeleton } from '@chakra-ui/react';
 import { MdAddShoppingCart } from 'react-icons/md';
-import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
+import { BiChevronLeft } from 'react-icons/bi';
+import { toast } from 'react-hot-toast';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { css } from 'twin.macro';
+import 'twin.macro';
 
 import DefaultButton from 'components/Buttons/DefaultButton';
 import { useGetProducts } from 'hooks/products/productsHooks';
-import { ProductDetailDataType } from 'types/productDetailTypes';
-import { Skeleton } from '@chakra-ui/react';
-import { toast } from 'react-hot-toast';
+import { ProductDetailDataType, ProductImageActiveType } from 'types/productDetailTypes';
 
-type ProductImageActiveType = {
-  index: number;
-  imageUrl?: string;
-};
+
+import OtherProductImages from './OtherProductImages';
+import PreviewImageNavigation from './PreviewImageNavigation';
 
 const ProductDetail: FC = () => {
   const router = useRouter();
@@ -60,60 +59,31 @@ const ProductDetail: FC = () => {
                     style={{ objectFit: 'cover' }}
                   />
                 )}
-
-                <div tw="flex flex-row absolute bottom-2 right-4 items-center">
-                  <BiChevronLeft
-                    size={'16px'}
-                    tw="cursor-pointer"
-                    onClick={() =>
-                      imageActive?.index > 0 &&
-                      setImageActive({
-                        index: imageActive?.index - 1,
-                        imageUrl: productActive?.images[imageActive?.index - 1],
-                      })
-                    }
-                  />
-                  <span tw="text-xs font-light text-black text-center min-w-[1.25rem]">
-                    {(imageActive?.index ?? 0) + 1}/{productActive?.images.length ?? 1}
-                  </span>
-                  <BiChevronRight
-                    size={'16px'}
-                    tw="cursor-pointer"
-                    onClick={() =>
-                      imageActive?.index < (productActive?.images.length ?? 3) &&
-                      setImageActive({
-                        index: imageActive?.index + 1,
-                        imageUrl: productActive?.images[imageActive?.index + 1],
-                      })
-                    }
-                  />
-                </div>
+                <PreviewImageNavigation
+                  currentPosition={(imageActive?.index ?? 0) + 1}
+                  totalPreviewImage={productActive?.images.length ?? 1}
+                  onPrev={() =>
+                    imageActive?.index > 0 &&
+                    setImageActive({
+                      index: imageActive?.index - 1,
+                      imageUrl: productActive?.images[imageActive?.index - 1],
+                    })
+                  }
+                  onNext={() =>
+                    imageActive?.index < (productActive?.images.length ?? 3) &&
+                    setImageActive({
+                      index: imageActive?.index + 1,
+                      imageUrl: productActive?.images[imageActive?.index + 1],
+                    })
+                  }
+                />
               </div>
               <div tw="w-full lg:w-[29.25rem]">
-                <div tw="flex flex-row gap-6 w-full items-center justify-center mx-auto">
-                  {productActive?.images.map((data: string, idx: number) => (
-                    <div
-                      tw="h-full shadow-sm p-1 rounded-lg cursor-pointer transition-all"
-                      key={idx}
-                      css={cssOtherProductImage(idx === imageActive?.index)}
-                      onClick={() =>
-                        setImageActive({
-                          index: idx,
-                          imageUrl: data,
-                        })
-                      }
-                    >
-                      <div tw="w-[4rem] h-[4rem] relative">
-                        <Image
-                          src={data}
-                          alt={`product image`}
-                          fill
-                          style={{ objectFit: 'cover' }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <OtherProductImages
+                  productActive={productActive!}
+                  imageActive={imageActive}
+                  setImageActive={setImageActive}
+                />
               </div>
             </div>
 
@@ -166,10 +136,3 @@ const ProductDetail: FC = () => {
 };
 
 export default ProductDetail;
-
-const cssOtherProductImage = (isImageActive: boolean) => css`
-  border: ${isImageActive ? '1.5px solid #4CA85E' : '0.5px solid #E2E8F0'} !important;
-  :hover {
-    transform: scale(1.02);
-  }
-`;

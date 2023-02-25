@@ -13,3 +13,8 @@ export type ProductDetailDataType = {
   reviewCount: number;
   sizes: Array<number>;
 };
+
+export type ProductImageActiveType = {
+  index: number;
+  imageUrl?: string;
+};
