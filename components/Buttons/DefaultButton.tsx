@@ -5,17 +5,19 @@ interface BaseButtonProps {
   suffix?: ReactNode;
   text: string;
   theme: 'green' | 'yellow';
+  onClick: () => void;
 }
 
 type ButtonProps = BaseButtonProps;
 
 const DefaultButton: FC<ButtonProps> = (props) => {
-  const { suffix, text, theme } = props;
+  const { suffix, text, theme, onClick } = props;
 
   return (
     <button
       tw="w-[max-content] h-[44px] min-w-[120px] flex items-center justify-center px-3 py-2 gap-2 rounded-lg transition-all"
       css={cssButton(theme)}
+      onClick={onClick}
     >
       {suffix ?? suffix}
       <span tw="text-xs font-semibold">{text}</span>
