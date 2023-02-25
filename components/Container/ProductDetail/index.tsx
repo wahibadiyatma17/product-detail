@@ -11,6 +11,7 @@ import DefaultButton from 'components/Buttons/DefaultButton';
 import { useGetProducts } from 'hooks/products/productsHooks';
 import { ProductDetailDataType, ProductImageActiveType } from 'types/productDetailTypes';
 
+
 import OtherProductImages from './OtherProductImages';
 import PreviewImageNavigation from './PreviewImageNavigation';
 
