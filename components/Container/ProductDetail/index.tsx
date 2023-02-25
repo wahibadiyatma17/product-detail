@@ -46,10 +46,22 @@ const ProductDetail: FC = () => {
               </div>
             </div>
 
-            <div tw="flex flex-col gap-2 w-7/12 h-[572px] py-12 px-4">
+            <div tw="flex flex-col gap-2 w-6/12 h-[572px] py-12 px-4">
               <h3 tw="font-semibold text-red-400 text-sm">SALE</h3>
               <h1 tw="font-bold text-black text-xl">{productsData[0]?.name}</h1>
-              <div tw="flex flex-row gap-2 my-2 w-[200px] h-[20px] bg-red-500"></div>
+              <div tw="flex flex-row gap-2 w-[200px] h-[20px] items-center">
+                <div tw="relative h-[14px] w-[96px]">
+                  <Image
+                    src={
+                      `/icons/icon-star-${productsData[0].rating}.svg` ?? '/icons/icon-star-5.svg'
+                    }
+                    alt={`rating icon`}
+                    fill
+                    style={{ objectFit: 'cover' }}
+                  />
+                </div>
+                <span tw="text-sm text-gray-400">({productsData[0].reviewCount} reviews)</span>
+              </div>
               <h3 tw="font-bold text-black text-2xl">{productsData[0]?.price}</h3>
 
               <div tw="w-full h-[1px] bg-gray-200 my-6 shadow-sm"></div>
