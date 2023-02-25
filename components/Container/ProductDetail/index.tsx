@@ -9,6 +9,7 @@ import DefaultButton from 'components/Buttons/DefaultButton';
 import { useGetProducts } from 'hooks/products/productsHooks';
 import { ProductDetailDataType } from 'types/productDetailTypes';
 import { Skeleton } from '@chakra-ui/react';
+import { toast } from 'react-hot-toast';
 
 type ProductImageActiveType = {
   index: number;
@@ -43,12 +44,12 @@ const ProductDetail: FC = () => {
   }, [productsData]);
 
   return (
-    <div tw="flex w-full min-h-screen max-w-[1366px] mx-auto">
-      <div tw="flex flex-row h-screen w-full justify-center items-center gap-8">
+    <div tw="flex flex-col w-full min-h-screen max-w-[1366px] mx-auto relative">
+      <div tw="flex  h-screen w-full justify-center items-center gap-8 flex-col pt-[132px] px-4 lg:(flex-row pt-0)">
         {!isProductsAPILoading && (
           <>
-            <div tw="flex flex-col items-end justify-center gap-4 w-5/12">
-              <div tw="relative w-[29.25rem] h-[29.25rem] rounded-lg shadow-md border-[0.5px] border-solid ">
+            <div tw="flex flex-col items-center justify-center gap-4 w-full lg:(w-5/12 items-end)">
+              <div tw="relative rounded-lg shadow-md border-[0.5px] border-solid w-full h-[24rem] lg:(w-[29.25rem] h-[29.25rem])">
                 {isProductsAPILoading ? (
                   <Skeleton />
                 ) : (
@@ -88,7 +89,7 @@ const ProductDetail: FC = () => {
                   />
                 </div>
               </div>
-              <div tw="w-[29.25rem]">
+              <div tw="w-full lg:w-[29.25rem]">
                 <div tw="flex flex-row gap-6 w-full items-center justify-center mx-auto">
                   {productActive?.images.map((data: string, idx: number) => (
                     <div
@@ -116,7 +117,7 @@ const ProductDetail: FC = () => {
               </div>
             </div>
 
-            <div tw="flex flex-col gap-2 w-6/12 h-[572px] py-12 px-4">
+            <div tw="flex flex-col gap-2 h-[572px] py-12 px-4 w-full lg:(w-6/12)">
               <h3 tw="font-semibold text-red-400 text-sm">SALE</h3>
               <h1 tw="font-bold text-black text-xl">{productActive?.name}</h1>
               <div tw="flex flex-row gap-2 w-[200px] h-[20px] items-center">
@@ -141,12 +142,24 @@ const ProductDetail: FC = () => {
                   theme="yellow"
                   text="Add To Cart"
                   suffix={<MdAddShoppingCart size={24} />}
+                  onClick={() => toast.success(`Successfully Added ${productActive?.name} To Cart`)}
                 />
-                <DefaultButton theme="green" text="Buy Now" />
+                <DefaultButton
+                  theme="green"
+                  text="Buy Now"
+                  onClick={() => toast.success(`Successfully Buy ${productActive?.name}`)}
+                />
               </div>
             </div>
           </>
         )}
+      </div>
+      <div
+        tw="flex cursor-pointer items-center justify-between px-3 py-2 w-[max-content] gap-3 absolute top-4 left-0 lg:left-10"
+        onClick={() => router.back()}
+      >
+        <BiChevronLeft size={'24px'} />
+        <span>Back</span>
       </div>
     </div>
   );
